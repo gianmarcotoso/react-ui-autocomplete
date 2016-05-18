@@ -1,0 +1,32 @@
+{
+  "name": "react-ui-autocomplete",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "node_modules/.bin/tape -r babel-register src/**/*.spec.jsx | node_modules/.bin/faucet",
+    "build-dist": "export NODE_ENV=production; node_modules/.bin/webpack -p --progress",
+    "build-dev": "export NODE_ENV=development; node_modules/.bin/webpack"
+  },
+  "author": "Gian Marco Toso <info@gianmarcotoso.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
+    "babel-core": "^6.4.5",
+    "babel-loader": "^6.2.1",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "css-loader": "^0.23.1",
+    "enzyme": "^2.3.0",
+    "faucet": "0.0.1",
+    "react-addons-test-utils": "^15.0.2",
+    "sinon": "^1.17.4",
+    "style-loader": "^0.13.0",
+    "tape": "^4.5.1",
+    "webpack": "^1.12.12"
+  },
+  "dependencies": {
+    "react": "^15.0.2",
+    "react-dom": "^15.0.2"
+  }
+}

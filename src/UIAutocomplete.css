@@ -1,0 +1,26 @@
+.ui-autocomplete {
+    position: relative;
+}
+
+.ui-autocomplete .ui-autocomplete-suggestions {
+    position:absolute;
+    z-index: 100;
+    left: 0;
+    width: 100%;
+    border: 1px solid #999;
+    border-top: none;
+    background: rgba(255,255,255,.9);
+}
+
+.ui-autocomplete .ui-autocomplete-suggestions .ui-autocomplete-suggestion-item {
+    display: block;
+    outline: 0;
+    width: 100%;
+    padding: 10px;
+    color: #333;
+}
+
+.ui-autocomplete .ui-autocomplete-suggestions .ui-autocomplete-suggestion-item.suggestion-focus {
+    color: #fff;
+    background-color: #18a689;
+}
