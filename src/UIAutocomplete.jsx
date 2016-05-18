@@ -35,7 +35,10 @@ class UIAutocomplete extends Component {
             get: () => this.state.value
         });
 
-        this.updateSuggestions = debounce(this.updateSuggestions.bind(this), this.props.suggestionUpdateInterval);
+        if (props.suggestionUpdateInterval > 0) {
+            this.updateSuggestions = debounce(this.updateSuggestions.bind(this), props.suggestionUpdateInterval);
+        }
+
         this.handleComponentBlur = this.handleComponentBlur.bind(this);
     }
 

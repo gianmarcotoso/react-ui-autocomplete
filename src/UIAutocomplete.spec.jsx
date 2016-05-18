@@ -25,13 +25,33 @@ global.navigator = {
 test('it renders with a simple array of options', t => {
     let options = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet"]
 
-    const wrapper = mount(<UIAutocomplete options={options} />)
+    const wrapper = mount(
+        <UIAutocomplete
+            options={options}
+            suggestionMinimumInputChar={0}
+            suggestionUpdateInterval={0}
+        />)
 
-    console.warn(wrapper.state())
+    t.equals(wrapper.find('.ui-autocomplete-suggestion-item').length, options.length)
 
-    setTimeout(() => {
-        t.equals(wrapper.find('.ui-autocomplete-suggestion-item').length, options.length)
-    }, 500)
+    t.end()
+})
+
+test('it respects the maximum option limit', t => {
+    let options = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet"]
+
+    const wrapper = mount(
+        <UIAutocomplete
+            options={options}
+
+            suggestionMaxCount={3}
+            suggestionMinimumInputChar={0}
+            suggestionUpdateInterval={0}
+        />)
+
+    console.warn(wrapper.state(), wrapper.props())
+
+    t.equals(wrapper.find('.ui-autocomplete-suggestion-item').length, 3)
 
     t.end()
 })
