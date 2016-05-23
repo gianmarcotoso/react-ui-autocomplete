@@ -163,27 +163,42 @@ class UIAutocomplete extends Component {
 
         let remaining = this.props.suggestionMaxCount;
         let suggestions = this.props.options.filter(i => {
+			if (remaining <= 0) return false;
+
             if (i.constructor !== Object) {
-                return i.includes(value);
+                let result = i.toLowerCase().includes(value.toLowerCase())
+				if (result) {
+					remaining--
+				}
+
+				return result
             }
 
             if (Array.isArray(this.props.optionFilter)) {
-                if (remaining <= 0) return false;
-
                 let or = this.props.optionFilter.filter( l => dotNotationLookup(l, i) && dotNotationLookup(l, i).includes ? dotNotationLookup(l, i).toLowerCase().includes(value.toLowerCase()) : false ).length > 0;
                 let and = this.props.optionFilter.reduce( (r, n) => {
-                    r = r + ' ' + dotNotationLookup(n, i);
+                    r = r + ' ' + dotNotationLookup(n, i)
                     return r;
-                }, '').includes(value);
+                }, '').includes(value)
 
                 if (or || and) {
-                    remaining--;
+                    remaining--
                 }
 
-                return or || and;
+                return or || and
             }
+			let lookupValue = dotNotationLookup(this.props.optionFilter, i)
+			if (!lookupValue) {
+				return false
+			}
 
-            return dotNotationLookup(this.props.optionFilter, i).includes(value);
+            let result = lookupValue.toLowerCase().includes(value.toLowerCase())
+
+			if (result) {
+				remaining--
+			}
+
+			return result
         });
 
         this.setState({suggestions, suggestionFocus: -1});
@@ -241,13 +256,13 @@ UIAutocomplete.propTypes = {
 UIAutocomplete.defaultProps = {
     optionFilter: 'name',
     optionValue: 'value',
-    optionLabelRender: o => o.name,
+    optionLabelRender: o => o && o.constructor === Object ? o.name : o,
 
     suggestionMinimumInputChar: 2,
     suggestionUpdateInterval: 300,
     suggestionMaxCount: 10,
 
-    inputClassName: 'form-control'
+    inputClassName: ''
 }
 
 export default UIAutocomplete;

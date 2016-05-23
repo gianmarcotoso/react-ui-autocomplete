@@ -21,6 +21,8 @@ global.navigator = {
   userAgent: 'node.js'
 };
 
+const ITEM_CLASS = '.ui-autocomplete-suggestion-item'
+
 /* THE ACTUAL TESTS */
 test('it renders with a simple array of options', t => {
     let options = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet"]
@@ -32,12 +34,16 @@ test('it renders with a simple array of options', t => {
             suggestionUpdateInterval={0}
         />)
 
-    t.equals(wrapper.find('.ui-autocomplete-suggestion-item').length, options.length)
+    t.equals(wrapper.find(ITEM_CLASS).length, options.length)
+
+    wrapper.find(ITEM_CLASS).forEach((c,i) => {
+        t.equals(c.text(), options[i])
+    })
 
     t.end()
 })
 
-test('it respects the maximum option limit', t => {
+test('it respects the maximum option limit on a simple array', t => {
     let options = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet"]
 
     const wrapper = mount(
@@ -49,9 +55,51 @@ test('it respects the maximum option limit', t => {
             suggestionUpdateInterval={0}
         />)
 
-    console.warn(wrapper.state(), wrapper.props())
+    t.equals(wrapper.find(ITEM_CLASS).length, 3)
 
-    t.equals(wrapper.find('.ui-autocomplete-suggestion-item').length, 3)
+    t.end()
+})
+
+test('it filters the options of a simple array based on user input', t => {
+    let options = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet"]
+
+    const wrapper = mount(
+        <UIAutocomplete
+            options={options}
+
+            suggestionUpdateInterval={0}
+        />)
+
+    wrapper.find('input').simulate('change', {target: {value: 'lo'}})
+    // should find "Lorem" and "Dolor"
+    t.equals(wrapper.find(ITEM_CLASS).length, 2)
+
+    t.end()
+})
+
+test('it renders options based on an array of objects', t => {
+    let options = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet"].map((i, j) => ({
+        id: 1 + j,
+        text: i
+    }))
+
+    const wrapper = mount(
+        <UIAutocomplete
+            options={options}
+
+            optionValue="id"
+            optionFilter="text"
+            optionLabelRender={o => o.text}
+
+            suggestionMinimumInputChar={0}
+            suggestionUpdateInterval={0}
+        />)
+
+    t.equals(wrapper.find(ITEM_CLASS).length, options.length)
+
+    wrapper.find(ITEM_CLASS).forEach((c,i) => {
+        t.equals(c.text(), options[i].text)
+    })
 
     t.end()
 })
