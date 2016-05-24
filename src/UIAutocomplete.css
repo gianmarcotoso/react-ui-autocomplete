@@ -1,3 +1,7 @@
+.ui-autocomplete * {
+    box-sizing: border-box;
+}
+
 .ui-autocomplete {
     position: relative;
 }
@@ -8,7 +12,6 @@
     left: 0;
     width: 100%;
     border: 1px solid #999;
-    border-top: none;
     background: rgba(255,255,255,.9);
 }
 
@@ -18,9 +21,10 @@
     width: 100%;
     padding: 10px;
     color: #333;
+    text-decoration: none;
 }
 
 .ui-autocomplete .ui-autocomplete-suggestions .ui-autocomplete-suggestion-item.suggestion-focus {
     color: #fff;
-    background-color: #18a689;
+    background-color: #333;
 }

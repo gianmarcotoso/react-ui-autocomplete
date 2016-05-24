@@ -32,7 +32,7 @@ class UIAutocomplete extends Component {
 
         Object.defineProperty(this, 'value', {
             enumerable: true,
-            get: () => this.state.value
+            get: this.getValue
         });
 
         if (props.suggestionUpdateInterval > 0) {
@@ -79,15 +79,21 @@ class UIAutocomplete extends Component {
     }
 
     handleInputKeyDown(event) {
-        if (event.keyCode === 13 && this.state.suggestions.length === 1) {
+		if (event.keyCode === 13 && this.state.suggestionFocus !== -1) {
             event.preventDefault();
-            this.handleSuggestionClick([...this.state.suggestions].pop());
+            this.updateValueBasedOnSuggestion(this.state.suggestions[this.state.suggestionFocus]);
             return;
         }
 
-        if (event.keyCode === 13 && this.state.suggestionFocus !== -1) {
+        if (event.keyCode === 13 && !this.props.allowNew && this.state.suggestions.length === 1) {
             event.preventDefault();
-            this.handleSuggestionClick(this.state.suggestions[this.state.suggestionFocus]);
+            this.updateValueBasedOnSuggestion([...this.state.suggestions].pop());
+            return;
+        }
+
+		if (event.keyCode === 13 && this.props.allowNew) {
+            event.preventDefault()
+            this.updateValueBasedOnInput()
             return;
         }
 
@@ -109,15 +115,7 @@ class UIAutocomplete extends Component {
     }
 
     handleSuggestionClick(suggestion) {
-        this.setState({
-            displayValue: this.props.optionLabelRender(suggestion),
-            value: suggestion[this.props.optionValue],
-            suggestions: []
-        }, () => {
-            if (this.props.onChange) {
-                this.props.onChange({target: this});
-            }
-        });
+        this.updateValueBasedOnSuggestion(suggestion)
     }
 
     handleSuggestionHover(suggestion, index) {
@@ -143,7 +141,7 @@ class UIAutocomplete extends Component {
     }
 
     resetInputValue() {
-        let current = this.props.options.filter(o => o[this.props.optionValue] == this.state.value).pop();
+        let current = this.props.options.find(o => o[this.props.optionValue] == this.state.value)
         if (!current) {
             this.setState({
                 displayValue: '',
@@ -154,8 +152,28 @@ class UIAutocomplete extends Component {
             return;
         }
 
-        this.handleSuggestionClick(current);
+        this.updateValueBasedOnSuggestion(current);
     }
+
+	updateValueBasedOnSuggestion(suggestion) {
+		this.setState({
+            displayValue: this.props.optionLabelRender(suggestion),
+            value: suggestion.constructor === Object  ? suggestion[this.props.optionValue] : suggestion,
+            suggestions: []
+        }, () => {
+            if (this.props.onChange) {
+                this.props.onChange(this.state.value, this.state.displayValue, suggestion);
+            }
+        })
+	}
+
+	updateValueBasedOnInput() {
+		this.setState({value: this.props.computeNewValueFromInput(this.refs.input.value), displayValue: this.refs.input.value}, () => {
+			if (this.props.onChange) {
+				this.props.onChange(this.state.value, this.state.displayValue)
+			}
+		})
+	}
 
     updateSuggestions() {
         let value = this.state.displayValue;
@@ -205,6 +223,10 @@ class UIAutocomplete extends Component {
 
     }
 
+	getValue() {
+		return this.state.value
+	}
+
     render() {
         let className = [
             this.props.className,
@@ -247,10 +269,11 @@ UIAutocomplete.propTypes = {
 
     inputClassName: React.PropTypes.string,
 
-    onChange: React.PropTypes.func,
-    value: React.PropTypes.any,
+	allowNew: React.PropTypes.bool,
+	computeNewValueFromInput: React.PropTypes.func,
 
-    help: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node])
+    onChange: React.PropTypes.func,
+    value: React.PropTypes.any
 }
 
 UIAutocomplete.defaultProps = {
@@ -261,6 +284,9 @@ UIAutocomplete.defaultProps = {
     suggestionMinimumInputChar: 2,
     suggestionUpdateInterval: 300,
     suggestionMaxCount: 10,
+
+	allowNew: false,
+	computeNewValueFromInput: v => v,
 
     inputClassName: ''
 }
