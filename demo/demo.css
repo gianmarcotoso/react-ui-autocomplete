@@ -1,0 +1,15 @@
+input {
+    transition: border linear .3s;
+
+    font-size: 12px;
+    font-family: sans-serif;
+    padding: 10px 10px;
+    border: 1px solid #999;
+    outline: none;
+    width: 100%;
+}
+
+input:focus, input:active {
+    outline: none;
+    border: 1px solid #333;
+}

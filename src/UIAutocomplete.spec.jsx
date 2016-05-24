@@ -37,6 +37,7 @@ test('it renders with a simple array of options', t => {
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     t.equals(wrapper.find(ITEM_CLASS).length, options.length)
 
     wrapper.find(ITEM_CLASS).forEach((c,i) => {
@@ -58,6 +59,7 @@ test('it respects the maximum option limit on a simple array', t => {
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     t.equals(wrapper.find(ITEM_CLASS).length, 3)
 
     t.end()
@@ -73,6 +75,7 @@ test('it filters the options of a simple array based on user input', t => {
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     wrapper.find('input').simulate('change', {target: {value: 'lo'}})
     // should find "Lorem" and "Dolor"
     t.equals(wrapper.find(ITEM_CLASS).length, 2)
@@ -101,6 +104,7 @@ test('it sets the correct value when selecting an option from a simple array', t
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     wrapper.find(ITEM_CLASS).first().simulate('click')
 
     t.ok(spyInternalHandler.calledOnce)
@@ -127,6 +131,7 @@ test('it renders options based on an array of objects', t => {
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     t.equals(wrapper.find(ITEM_CLASS).length, options.length)
 
     wrapper.find(ITEM_CLASS).forEach((c,i) => {
@@ -155,6 +160,7 @@ test('it respects the maximum option limit on an array of objects', t => {
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     t.equals(wrapper.find(ITEM_CLASS).length, 3)
 
     t.end()
@@ -177,6 +183,7 @@ test('it filters the options of an array of objects based on user input', t => {
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     wrapper.find('input').simulate('change', {target: {value: 'lo'}})
     // should find "Lorem" and "Dolor"
     t.equals(wrapper.find(ITEM_CLASS).length, 2)
@@ -202,6 +209,7 @@ test('it filters the options of an array of objects when the filter is on multip
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     wrapper.find('input').simulate('change', {target: {value: 'em'}})
     // should find "Lorem" and "Amet"
     t.equals(wrapper.find(ITEM_CLASS).length, 2)
@@ -240,6 +248,7 @@ test('it sets the correct value when selecting an option from an object array', 
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     wrapper.find(ITEM_CLASS).first().simulate('click')
 
     t.ok(spyInternalHandler.calledOnce)
@@ -259,6 +268,7 @@ test('it focuses the appropriate suggestion when using arrow keys and selects it
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     wrapper.find('input').simulate('keydown', {keyCode: KEY_DOWN})
     wrapper.find('input').simulate('keydown', {keyCode: KEY_DOWN})
     wrapper.find('input').simulate('keydown', {keyCode: KEY_ENTER})
@@ -289,6 +299,7 @@ test('it selects the only available option when pressing return with one suggest
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
     wrapper.find('input').simulate('change', {target: {value: 'lorem'}})
     wrapper.find('input').simulate('keydown', {keyCode: KEY_ENTER})
 
@@ -308,6 +319,7 @@ test('it waits the specified interval before updating suggestions', t => {
             suggestionUpdateInterval={300}
         />)
 
+    wrapper.find('input').simulate('focus')
     wrapper.find('input').simulate('change', {target: {value: 'lo'}})
 
     // No time has passed, so no suggestion is available yet! But we have already typed something
@@ -344,6 +356,8 @@ test('it behaves as a controlled component when both value and onchange are set'
             suggestionUpdateInterval={0}
         />)
 
+    wrapper.find('input').simulate('focus')
+
     t.equals(wrapper.instance().value, 2)
     t.equals(wrapper.state().displayValue, "Ipsum")
 
@@ -356,7 +370,41 @@ test('it behaves as a controlled component when both value and onchange are set'
     t.end()
 })
 
-test('it allows for the creation of a new value', t => {
+test('it allows for the creation of a new string value', t => {
+    let options = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet"]
+
+    let onChange = v => {
+        options.push(v)
+    }
+
+    const wrapper = mount(
+        <UIAutocomplete
+            options={options}
+
+            onChange={onChange}
+
+            optionValue="id"
+            optionFilter="text"
+            optionLabelRender={o => o.text}
+
+            allowNew={true}
+
+            suggestionMinimumInputChar={0}
+            suggestionUpdateInterval={0}
+        />)
+
+    wrapper.find('input').simulate('focus')
+
+    wrapper.find('input').simulate('change', {target: {value: 'Neque'}})
+
+    t.equals(wrapper.instance().value, "Neque")
+    t.equals(wrapper.state().displayValue, "Neque")
+
+    t.end()
+})
+
+
+test('it allows for the creation of a new object value', t => {
     let options = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet"].map((i,j) => ({
         id: 1 + j,
         text: i
@@ -365,8 +413,6 @@ test('it allows for the creation of a new value', t => {
     let onChange = (v, d) => {
         options.push({id: v, text: d})
     }
-
-    let value = 2
 
     const wrapper = mount(
         <UIAutocomplete
@@ -380,10 +426,13 @@ test('it allows for the creation of a new value', t => {
 
             allowNew={true}
             computeNewValueFromInput={v => 1 + options.length}
+            newValueRequiresEnter={true}
 
             suggestionMinimumInputChar={0}
             suggestionUpdateInterval={0}
         />)
+
+    wrapper.find('input').simulate('focus')
 
     wrapper.find('input').simulate('change', {target: {value: 'Neque'}})
     wrapper.find('input').simulate('keydown', {keyCode: KEY_ENTER})

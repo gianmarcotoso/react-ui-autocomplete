@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node_modules/.bin/tape -r babel-register src/**/*.spec.jsx | node_modules/.bin/faucet",
     "build-dist": "export NODE_ENV=production; node_modules/.bin/webpack -p --progress",
-    "build-dev": "export NODE_ENV=development; node_modules/.bin/webpack"
+    "build-dev": "export NODE_ENV=development; node_modules/.bin/webpack",
+    "demo": "node demo.js"
   },
   "author": "Gian Marco Toso <info@gianmarcotoso.com>",
   "license": "MIT",

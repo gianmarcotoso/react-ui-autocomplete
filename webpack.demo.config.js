@@ -2,7 +2,9 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: "./demo/index.js",
+    entry: {
+        app: ["./demo/index.js"]
+    },
     output: {
         path: __dirname + "/demo-dist",
         filename: "js/index.js"
