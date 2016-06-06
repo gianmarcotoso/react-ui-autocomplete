@@ -1,6 +1,6 @@
 # ReactUI Autocomplete
 
-An autocomplete input component for ReactJS that behaves like the love child of an input field and a select box.
+An autocomplete input component for ReactJS that behaves like the love child of an input field and a select box. [Demo](http://demo.gianmarcotoso.com/react-ui-autocomplete)
 
 _WARNING: This is in a very early stage of development!_
 
