@@ -19,11 +19,13 @@ The component absolutely requires one property, an array of options to show to t
 To use an array of string, just pass it along in the `options` property:
 
 ```javascript
-let options = ["One", "Two", "Three", "Four", "Five", "Six"]
+// Somewhere in your code
+const getOptions = () => ["One", "Two", "Three", "Four", "Five", "Six"]
 
+// In your render method
 return (
     <UIAutocomplete
-        options={options}
+        options={getOptions()}
     />
 )
 ```
@@ -39,18 +41,20 @@ When using an array of objects, you must tell the component three additional thi
 - How the suggestions should be rendered: this is a function that returns a string representing the suggestion "label", starting from the object the suggestion represents. Pass this function to the `optionLabelRender` property;
 
 ```javascript
-let options = [
+// Somewhere
+const getOptions = () => ([
     { id: 1, name: "John", surname: "Smith" },
     { id: 1, name: "John", surname: "Constantine" },
     { id: 1, name: "Long", surname: "John Silver"},
     { id: 1, name: "Johnny", surname: "Guitar" },
     { id: 2, name: "Rob", surname: "White" },
     { id: 3, name: "Frank", surname: "Black"}
-]
+])
 
+// In yout render method
 return (
     <UIAutocomplete
-        options={options}
+        options={getOptions()}
 
         optionValue="id"
         optionFilter={['name', 'surname']}
@@ -64,13 +68,15 @@ return (
 Regardless of what you decide to pass to the `options` property, you can decide to make `UIAutocomplete` a controlled component. To do so, you simply need to define the `value` and `onChange` properties as you would on any other input component. The `onChange` property expects a callback that receives the `value`, the `displayValue` and the `suggestion` that has been selected to set the value (if any).
 
 ```javascript
-let options = ["One", "Two", "Three", "Four", "Five", "Six"]
+// Somewhere
+const getOptions = () => ["One", "Two", "Three", "Four", "Five", "Six"]
 let value = ""
 let handleValueChange = (newValue, displayValue, suggestion) => { value = newValue }
 
+// In your render method
 return (
     <UIAutocomplete
-        options={options}
+        options={getOptions()}
 
         value={value}
         onChange={handleValueChange}
@@ -92,13 +98,15 @@ You'll probably want to tweak how the component looks. Other than setting a `cla
 
 ### Allowing arbitrary values (Experimental)
 
-**NOTE: This is far from being final and I'm considering to remove it altogether**
+**NOTE: This is far from being final and I'm considering its removal**
 
 If you don't want to limit the user input to the passed `options`, you can set to true the `allowNew` property. When using a simple string array, you don't have to do anything else:
 
 ```javascript
-let options = ["One", "Two", "Three", "Four", "Five", "Six"]
+// Somewhere in your code
+const getOptions = () => ["One", "Two", "Three", "Four", "Five", "Six"]
 
+// In your render method
 return (
     <UIAutocomplete
         options={options}
@@ -113,14 +121,15 @@ At any point, the `value` property of the component will be set to whatever you'
 When using an object array, you need to tell the component which value to assign to the "unknown" input, since it's not part of the `options` array and the component has no way of knowing how you want to treat an unknown value. This is achieved by passing a function to the `computeNewValueFromInput` property, which receives the current input's value as its only parameter:
 
 ```javascript
-let options = [
+// Somewhere in your code
+const getOptions = () => ([
     { id: 1, name: "John", surname: "Smith" },
     { id: 1, name: "John", surname: "Constantine" },
     { id: 1, name: "Long", surname: "John Silver"},
     { id: 1, name: "Johnny", surname: "Guitar" },
     { id: 2, name: "Rob", surname: "White" },
     { id: 3, name: "Frank", surname: "Black"}
-]
+])
 
 let value = null
 let handleValueChange = (newValue, displayValue, suggestion) => {
@@ -136,6 +145,7 @@ let handleValueChange = (newValue, displayValue, suggestion) => {
     }
 }
 
+// In your render method
 return (
     <UIAutocomplete
         options={options}
