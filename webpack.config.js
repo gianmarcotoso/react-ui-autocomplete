@@ -7,7 +7,7 @@ module.exports = {
         path: path.join(__dirname, process.env.NODE_ENV === 'production' ? 'dist' : 'dev'),
         filename: "index.js",
 
-	library: 'ui-autocomplete',
+	library: 'react-ui-autocomplete',
 	libraryTarget: 'umd'
     },
     module: {
