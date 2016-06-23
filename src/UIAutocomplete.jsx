@@ -1,23 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
-
-const dotNotationLookup = (k, v) => k.split('.').reduce( (o,i) => o[i], v)
-
-// Thanks, David Walsh: https://davidwalsh.name/javascript-debounce-function
-function debounce(func, wait, immediate) {
-	var timeout
-	return function() {
-		var context = this, args = arguments
-		var later = function() {
-			timeout = null
-			if (!immediate) func.apply(context, args)
-		}
-		var callNow = immediate && !timeout
-		clearTimeout(timeout)
-		timeout = setTimeout(later, wait)
-		if (callNow) func.apply(context, args)
-	}
-}
+import dotNotationLookup from './utils/dotNotationLookup'
+import debounce from './utils/debounce'
 
 class UIAutocomplete extends Component {
     constructor(props) {
@@ -41,6 +25,10 @@ class UIAutocomplete extends Component {
         }
 
         this.handleComponentBlur = this.handleComponentBlur.bind(this)
+        this.handleComponentFocus = this.handleComponentFocus.bind(this)
+        this.handleInputValueChange = this.handleInputValueChange.bind(this)
+        this.handleInputKeyUp = this.handleInputKeyUp.bind(this)
+        this.handleInputKeyDown = this.handleInputKeyDown.bind(this)
     }
 
     componentDidMount() {
@@ -248,7 +236,7 @@ class UIAutocomplete extends Component {
 
         return (
             <div className={className} ref="container">
-                <input type="text" ref="input" className={this.props.inputClassName} value={this.state.displayValue} onFocus={this.handleComponentFocus.bind(this)} onChange={this.handleInputValueChange.bind(this)} onKeyUp={this.handleInputKeyUp.bind(this)} onKeyDown={this.handleInputKeyDown.bind(this)} />
+                <input type="text" ref="input" className={this.props.inputClassName} value={this.state.displayValue} onFocus={this.handleComponentFocus} onChange={this.handleInputValueChange} onKeyUp={this.handleInputKeyUp} onKeyDown={this.handleInputKeyDown} />
 
                 {this.state.suggestions.length > 0 && this.state.hasFocus ? (
                     <div className="ui-autocomplete-suggestions">
