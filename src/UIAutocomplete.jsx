@@ -77,19 +77,19 @@ class UIAutocomplete extends Component {
 
     handleInputKeyDown(event) {
 		if (event.keyCode === 13 && this.state.suggestionFocus !== -1) {
-            event.preventDefault()
+            if (this.props.shouldPreventSubmitOnEnter) event.preventDefault()
             this.updateValueBasedOnSuggestion(this.state.suggestions[this.state.suggestionFocus])
             return
         }
 
         if (event.keyCode === 13 && !this.props.allowNew && this.state.suggestions.length === 1) {
-            event.preventDefault()
+            if (this.props.shouldPreventSubmitOnEnter) event.preventDefault()
             this.updateValueBasedOnSuggestion([...this.state.suggestions].pop())
             return
         }
 
 		if (event.keyCode === 13 && this.props.allowNew) {
-            event.preventDefault()
+            if (this.props.shouldPreventSubmitOnEnter) event.preventDefault()
             this.updateValueBasedOnInput()
             return
         }
@@ -157,7 +157,7 @@ class UIAutocomplete extends Component {
 	updateValueBasedOnSuggestion(suggestion) {
 		this.setState({
             displayValue: this.props.optionLabelRender(suggestion),
-            value: suggestion.constructor === Object  ? suggestion[this.props.optionValue] : suggestion,
+            value: suggestion && suggestion.constructor === Object  ? suggestion[this.props.optionValue] : suggestion,
             suggestions: []
         }, () => {
             if (this.props.onChange) {
@@ -272,7 +272,9 @@ UIAutocomplete.propTypes = {
 	newValueRequiresEnter: React.PropTypes.bool,
 
     onChange: React.PropTypes.func,
-    value: React.PropTypes.any
+    value: React.PropTypes.any,
+
+    shouldPreventSubmitOnEnter: React.PropTypes.bool
 }
 
 UIAutocomplete.defaultProps = {
@@ -288,7 +290,9 @@ UIAutocomplete.defaultProps = {
 	computeNewValueFromInput: v => v,
 	newValueRequiresEnter: false,
 
-    inputClassName: ''
+    inputClassName: '',
+
+    shouldPreventSubmitOnEnter: true
 }
 
 export default UIAutocomplete
