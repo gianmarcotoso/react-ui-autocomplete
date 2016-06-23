@@ -139,7 +139,7 @@ class UIAutocomplete extends Component {
 
     resetInputValue() {
 		if (!this.props.allowNew) {
-	        let current = this.props.options.find(o => o[this.props.optionValue] == this.state.value)
+	        let current = this.props.options.find(o => o[this.props.optionValue] == this.state.value || o === this.state.value)
 	        if (!current) {
 	            this.setState({
 	                displayValue: '',
