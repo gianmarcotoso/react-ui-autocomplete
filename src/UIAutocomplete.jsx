@@ -253,10 +253,7 @@ class UIAutocomplete extends Component {
 }
 
 UIAutocomplete.propTypes = {
-    options: React.PropTypes.arrayOf(React.PropTypes.oneOfType([
-        React.PropTypes.string,
-        React.PropTypes.object
-    ])).isRequired,
+    options: React.PropTypes.array.isRequired,
     optionFilter: React.PropTypes.oneOfType([
         React.PropTypes.string,
         React.PropTypes.arrayOf(React.PropTypes.string)
